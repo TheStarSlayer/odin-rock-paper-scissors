@@ -2,10 +2,55 @@
 
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>Rock-Paper-Scissors!</title>
+        <link rel="stylesheet" href="style.css">
     </head>
 
     <body>
-        <script src="rps.js"></script>
+        <div class="title">
+            Rock! Paper! Scissors!!!
+        </div>
+
+        <div class="score">
+            <span id="rounds">
+                Rounds: <span id="noOfRounds"></span>
+            </span>
+
+            <span id="user">
+                User wins: <span id="userWins"></span>
+            </span>
+
+            <span id="computer">
+                Computer wins: <span id="computerWins"></span>
+            </span>
+        </div>
+
+        <div class="game-container">
+            <span id="message">Choose your weapon!</span>
+
+            <div class="choice">
+                <div class="choice-card" id="rock">
+                    <img src="img/chinese-rock.png" alt="rock">
+                    <span>Rock</span>
+                </div>
+
+                <div class="choice-card" id="paper">
+                    <img src="img/paper.png" alt="paper">
+                    <span>Paper</span>
+                </div>
+
+                <div class="choice-card" id="scissors">
+                    <img src="img/scissors.png" alt="scissors">
+                    <span>Scissors</span>
+                </div>
+            </div>
+
+            <div class="round-result">
+                <span id="result">WHO WILL IT BE?</span>
+                <button id="nextRound">Next round</button>
+                <button id="endGame">End Game</button>
+            </div>
+        </div>
     </body>
 </html>
