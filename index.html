@@ -14,15 +14,15 @@
 
         <div class="score">
             <span id="rounds">
-                Rounds: <span id="noOfRounds"></span>
+                Rounds: <span id="noOfRounds">0</span>
             </span>
 
             <span id="user">
-                User wins: <span id="userWins"></span>
+                User wins: <span id="userWins">0 wins</span>
             </span>
 
             <span id="computer">
-                Computer wins: <span id="computerWins"></span>
+                Computer wins: <span id="computerWins">0 wins</span>
             </span>
         </div>
 
@@ -33,24 +33,31 @@
                 <div class="choice-card" id="rock">
                     <img src="img/chinese-rock.png" alt="rock">
                     <span>Rock</span>
+                    <span class="chose-by"></span>
                 </div>
 
                 <div class="choice-card" id="paper">
                     <img src="img/paper.png" alt="paper">
                     <span>Paper</span>
+                    <span class="chose-by"></span>
                 </div>
 
                 <div class="choice-card" id="scissors">
                     <img src="img/scissors.png" alt="scissors">
                     <span>Scissors</span>
+                    <span class="chose-by"></span>
                 </div>
             </div>
 
-            <div class="round-result">
-                <span id="result">WHO WILL IT BE?</span>
-                <button id="nextRound">Next round</button>
-                <button id="endGame">End Game</button>
+            <div class="hidden">
+                <span id="result"></span>
+                <div class="buttons">
+                    <button id="next-round">Next round</button>
+                    <button id="end-game">End Game</button>
+                </div>
             </div>
         </div>
+
+        <script src="rps.js"></script>
     </body>
 </html>

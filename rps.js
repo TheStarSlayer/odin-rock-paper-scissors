@@ -1,12 +1,17 @@
-let userWins = 0, computerWins = 0;
-let invalidFlag = false;
+let totalRounds = 0, userWins = 0, computerWins = 0;
 
-function chooseRPSUser() {
-    let userChoice = prompt("Choose your weapon!");
-    userChoice = userChoice.toLowerCase();
+const choiceContainer = document.querySelector('.choice');
 
-    return userChoice;
-}
+const possibleUserChoices = document.querySelectorAll('.choice-card');
+
+const roundResultBoard = document.querySelector('div.hidden');
+
+possibleUserChoices.forEach((choice) => {
+    choice.addEventListener('click', () => {
+        if (!choice.lastElementChild.textContent)
+            startRound(choice.id);
+    });
+});
 
 function chooseRPSComputer() {
     let randomChoice = Math.round(Math.random() * 2);
@@ -18,104 +23,161 @@ function chooseRPSComputer() {
     return 'scissors';
 }
 
-function isValid(userChoice) {
-    let validChoice = true;
-    switch (userChoice) {
-        case 'rock':
-        case 'paper':
-        case 'scissors':
-            break;
-        
-        default:
-            validChoice = false;
-    }
+function decideVictor(userChoice, computerChoice) {
+    /*
+        Based on userChoice and computerChoice, compute
+        the victor.
 
-    return validChoice;
-}
+        Return values:
+        --------------------------
+        1 : User is winner,
+        0 : Tie, and
+        -1 : Computer is winner
+    */
 
-let capitalize = weapon => weapon.at(0).toUpperCase() + weapon.slice(1);
-
-function playRound() {
-    
-    let userChoice = chooseRPSUser();
-    if (!isValid(userChoice)) {
-        alert("Invalid choice, reload to play again!");
-        invalidFlag = true;
-        return false;
-    }
-
-    let computerChoice = chooseRPSComputer();
-
-    alert(`You chose: ${capitalize(userChoice)}, Computer chose: ${capitalize(computerChoice)}`);
-
-    let winner = "tie";
+    let winner = 0;
     if (userChoice === 'rock') {
-        if (computerChoice === 'rock') {
-            alert("It's a tie!");
+        if (computerChoice === 'scissors') {
+            winner = 1;
         }
         else if (computerChoice === 'paper') {
-            alert("You lose!");
-            winner = "computer";
-        }
-        else {
-            alert("You win!");
-            winner = "user";
+            winner = -1;
         }
     }
     else if (userChoice === 'paper') {
-        if (computerChoice === 'paper') {
-            alert("It's a tie!");
+        if (computerChoice === 'rock') {
+            winner = 1;
         }
         else if (computerChoice === 'scissors') {
-            alert("You lose!");
-            winner = "computer";
-        }
-        else {
-            alert("You win!");
-            winner = "user";
+            winner = -1;
         }
     }
     else {
-        if (computerChoice === 'scissors') {
-            alert("It's a tie!");
+        if (computerChoice === 'paper') {
+            winner = 1;
         }
         else if (computerChoice === 'rock') {
-            alert("You lose!");
-            winner = "computer";
-        }
-        else {
-            alert("You win!");
-            winner = "user";
+            winner = -1;
         }
     }
-    
+
     return winner;
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        if (invalidFlag === true)
-            return;
+function updateChosenCards(userChoice, computerChoice) {
+    let notChosenCard = [];
 
-        let roundWinner = playRound();
-        if (roundWinner === 'user')
-            userWins++;
-        else if (roundWinner === 'computer')
-            computerWins++;
-        else {
-            alert("Rematch!");
-            i--;
+    possibleUserChoices.forEach((choice) => {
+        if (userChoice === computerChoice && choice.id === userChoice) {
+            choice.lastElementChild.style.color = 'grey';
+            choice.lastElementChild.textContent = 'Same choice!';
         }
+        else if (userChoice === computerChoice) {
+            notChosenCard.push(choice);
+        }
+        else {
+            if (choice.id === userChoice) {
+                choice.lastElementChild.style.color = 'green';
+                choice.lastElementChild.textContent = 'User\'s choice!';
+            }
+            else if (choice.id === computerChoice) {
+                choice.lastElementChild.style.color = 'red';
+                choice.lastElementChild.textContent = 'Computer\'s choice!'
+            }
+            else {
+                notChosenCard.push(choice);
+            }
+        }
+    });
 
-        alert(`User wins: ${userWins} games. Computer wins: ${computerWins} games.`);
-    }
-
-    let victorMessage = "Victor: ";
-
-    victorMessage += (userWins > computerWins) ? "User! " : "Computer! ";
-    victorMessage += "Reload to play again."
-
-    alert(victorMessage);
+    notChosenCard.forEach((card) => {
+        choiceContainer.removeChild(card);
+    })
 }
 
-playGame();
+function showResults(victor) {
+    const resultText = roundResultBoard.firstElementChild;
+    switch (victor) {
+        case 1:
+            resultText.style.color = 'green';
+            resultText.textContent = 'User won!';
+            break;
+        
+        case -1:
+            resultText.style.color = 'red';
+            resultText.textContent = 'Computer won!';
+            break;
+
+        case 0:
+            resultText.style.color = 'grey';
+            resultText.textContent = 'It\'s a tie!';
+            break;
+    }
+
+    roundResultBoard.classList.remove('hidden');
+    roundResultBoard.classList.add('round-result');
+}
+
+const nextRound = document.querySelector('#next-round');
+nextRound.addEventListener('click', () => {
+    roundResultBoard.classList.remove('round-result');
+    roundResultBoard.classList.add('hidden');
+
+    possibleUserChoices.forEach((choice) => {
+        choice.lastElementChild.textContent = null;
+        choiceContainer.appendChild(choice);
+    })
+});
+
+const endGame = document.querySelector('#end-game');
+endGame.addEventListener('click', () => {
+    if (userWins > computerWins) {
+        alert('User is the winner');
+    }
+    else if (userWins < computerWins) {
+        alert('You lose! Better luck next time!');
+    }
+    else {
+        alert('It\'s a tie!');
+    }
+
+    let restartGame = confirm("Wanna play again?");
+
+    if (restartGame) {
+        nextRound.dispatchEvent(new Event('click'));
+        totalRounds = 0;
+        computerWins = 0;
+        userWins = 0;
+        updateScoreBoard();
+    }
+    else {
+        alert('Goodbye!');
+    }
+});
+
+function updateScoreBoard() {
+    const noOfRounds = document.querySelector('#noOfRounds');
+    noOfRounds.textContent = String(totalRounds);
+
+    const userWinCount = document.querySelector('#userWins');
+    userWinCount.textContent = `${userWins} wins`;
+
+    const computerWinCount = document.querySelector('#computerWins');
+    computerWinCount.textContent = `${computerWins} wins`;
+}
+
+function startRound(userChoice) {
+    let computerChoice = chooseRPSComputer();
+
+    updateChosenCards(userChoice, computerChoice);
+    let victor = decideVictor(userChoice, computerChoice);
+
+    if (victor === 1)
+        userWins++;
+    else if (victor === -1)
+        computerWins++;
+    totalRounds++;
+
+    showResults(victor);
+    updateScoreBoard();
+}

@@ -3,17 +3,18 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     padding-bottom: 20px;
 }
 
 img {
     height: 150px;
-    width: auto;
+    width: 170px;
 }
 
 .title {
     display: flex;
-    align-items: center;
+    text-align: center;
     justify-content: center;
     font-size: 36px;
     background-color: black;
@@ -24,15 +25,15 @@ img {
 .score {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
     background-color: purple;
     color: white;
     font-size: 24px;
-    padding: 0.5rem;
+    padding: 0.8rem;
 }
 
 .game-container {
-    margin-top: 4rem;
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -51,6 +52,8 @@ img {
     justify-content: space-evenly;
     align-items: center;
     width: 100%;
+    flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
 .choice-card {
@@ -73,14 +76,33 @@ img {
     background-color: #d9d9d9d3;
 }
 
-.round-result {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
+.choice-by {
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
 }
 
-#nextRound,
-#endGame {
+.hidden {
+    display: none;
+}
+
+.round-result {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+}
+
+#next-round,
+#end-game{
     padding: 12px 16px;
     background-color: rgb(2, 93, 2);
     color: white;
