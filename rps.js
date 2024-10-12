@@ -1,17 +1,69 @@
 let totalRounds = 0, userWins = 0, computerWins = 0;
 
+const gameContainer = document.querySelector('.game-container');
 const choiceContainer = document.querySelector('.choice');
-
 const possibleUserChoices = document.querySelectorAll('.choice-card');
+const roundResultBoard = document.querySelector('.round-result');
+const gameResult = document.querySelector('.game-over');
 
-const roundResultBoard = document.querySelector('div.hidden');
-
+// Buttons events start
 possibleUserChoices.forEach((choice) => {
     choice.addEventListener('click', () => {
         if (!choice.lastElementChild.textContent)
             startRound(choice.id);
     });
 });
+
+const nextRound = document.querySelector('#next-round');
+nextRound.addEventListener('click', () => {
+    roundResultBoard.classList.add('hidden');
+
+    possibleUserChoices.forEach((choice) => {
+        choice.lastElementChild.textContent = null;
+        choice.classList.remove('hidden');
+    })
+});
+
+const endGame = document.querySelector('#end-game');
+endGame.addEventListener('click', () => {
+    gameContainer.classList.add('hidden');
+    gameResult.classList.remove('hidden');
+
+    let gameResultText = gameResult.firstElementChild;
+    gameResult.classList.forEach((cssClass) => {
+        gameResultText.classList.remove(cssClass);
+    });
+
+    if (userWins > computerWins) {
+        gameResultText.classList.add('win');
+        gameResultText.textContent = 'User is the winner';
+    }
+    else if (userWins < computerWins) {
+        gameResultText.classList.add('lose');
+        gameResultText.textContent = 'You lose! Better luck next time!';
+    }
+    else {
+        gameResultText.classList.add('tie');
+        gameResultText.textContent = 'It\'s a tie!';
+    }
+
+    document.querySelector('#noOfRoundsScore').textContent = `${totalRounds} rounds`;
+    document.querySelector('#userScore').textContent = `${userWins} wins`;
+    document.querySelector('#computerScore').textContent = `${computerWins} wins`;
+    document.querySelector('#ties').textContent = `${totalRounds - (userWins + computerWins)} ties`;
+});
+
+const restartGame = document.querySelector('#restart-game');
+restartGame.addEventListener('click', () => {
+    nextRound.dispatchEvent(new Event('click'));
+    totalRounds = 0;
+    computerWins = 0;
+    userWins = 0;
+    updateScoreBoard();
+    gameResult.classList.add('hidden');
+    gameContainer.classList.remove('hidden');
+});
+// Button events end
 
 function chooseRPSComputer() {
     let randomChoice = Math.round(Math.random() * 2);
@@ -65,39 +117,33 @@ function decideVictor(userChoice, computerChoice) {
 }
 
 function updateChosenCards(userChoice, computerChoice) {
-    let notChosenCard = [];
-
     possibleUserChoices.forEach((choice) => {
-
+        let cardChosenBy = choice.lastElementChild;
         choice.lastElementChild.classList.forEach((cssClass) => {
-            choice.lastElementChild.classList.remove(cssClass);
+            cardChosenBy.classList.remove(cssClass);
         });
 
         if (userChoice === computerChoice && choice.id === userChoice) {
-            choice.lastElementChild.classList.add('tie');
-            choice.lastElementChild.textContent = 'Same choice!';
+            cardChosenBy.classList.add('tie');
+            cardChosenBy.textContent = 'Same choice!';
         }
         else if (userChoice === computerChoice) {
-            notChosenCard.push(choice);
+            choice.classList.add('hidden');
         }
         else {
             if (choice.id === userChoice) {
-                choice.lastElementChild.classList.add('win');
-                choice.lastElementChild.textContent = 'User\'s choice!';
+                cardChosenBy.classList.add('win');
+                cardChosenBy.textContent = 'User\'s choice!';
             }
             else if (choice.id === computerChoice) {
-                choice.lastElementChild.classList.add('lose');
-                choice.lastElementChild.textContent = 'Computer\'s choice!'
+                cardChosenBy.classList.add('lose');
+                cardChosenBy.textContent = 'Computer\'s choice!'
             }
             else {
-                notChosenCard.push(choice);
+                choice.classList.add('hidden');
             }
         }
     });
-
-    notChosenCard.forEach((card) => {
-        card.classList.add('hidden');
-    })
 }
 
 function showResults(victor) {
@@ -126,42 +172,6 @@ function showResults(victor) {
 
     roundResultBoard.classList.remove('hidden');
 }
-
-const nextRound = document.querySelector('#next-round');
-nextRound.addEventListener('click', () => {
-    roundResultBoard.classList.add('hidden');
-
-    possibleUserChoices.forEach((card) => {
-        card.lastElementChild.textContent = null;
-        card.classList.remove('hidden');
-    })
-});
-
-const endGame = document.querySelector('#end-game');
-endGame.addEventListener('click', () => {
-    if (userWins > computerWins) {
-        alert('User is the winner');
-    }
-    else if (userWins < computerWins) {
-        alert('You lose! Better luck next time!');
-    }
-    else {
-        alert('It\'s a tie!');
-    }
-
-    let restartGame = confirm("Wanna play again?");
-
-    if (restartGame) {
-        nextRound.dispatchEvent(new Event('click'));
-        totalRounds = 0;
-        computerWins = 0;
-        userWins = 0;
-        updateScoreBoard();
-    }
-    else {
-        alert('Goodbye!');
-    }
-});
 
 function updateScoreBoard() {
     const noOfRounds = document.querySelector('#noOfRounds');
