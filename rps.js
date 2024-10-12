@@ -68,8 +68,13 @@ function updateChosenCards(userChoice, computerChoice) {
     let notChosenCard = [];
 
     possibleUserChoices.forEach((choice) => {
+
+        choice.lastElementChild.classList.forEach((cssClass) => {
+            choice.lastElementChild.classList.remove(cssClass);
+        });
+
         if (userChoice === computerChoice && choice.id === userChoice) {
-            choice.lastElementChild.style.color = 'grey';
+            choice.lastElementChild.classList.add('tie');
             choice.lastElementChild.textContent = 'Same choice!';
         }
         else if (userChoice === computerChoice) {
@@ -77,11 +82,11 @@ function updateChosenCards(userChoice, computerChoice) {
         }
         else {
             if (choice.id === userChoice) {
-                choice.lastElementChild.style.color = 'green';
+                choice.lastElementChild.classList.add('win');
                 choice.lastElementChild.textContent = 'User\'s choice!';
             }
             else if (choice.id === computerChoice) {
-                choice.lastElementChild.style.color = 'red';
+                choice.lastElementChild.classList.add('lose');
                 choice.lastElementChild.textContent = 'Computer\'s choice!'
             }
             else {
@@ -91,41 +96,44 @@ function updateChosenCards(userChoice, computerChoice) {
     });
 
     notChosenCard.forEach((card) => {
-        choiceContainer.removeChild(card);
+        card.classList.add('hidden');
     })
 }
 
 function showResults(victor) {
     const resultText = roundResultBoard.firstElementChild;
+
+    resultText.classList.forEach(cssClass => {
+        resultText.classList.remove(cssClass);
+    });
+
     switch (victor) {
         case 1:
-            resultText.style.color = 'green';
+            resultText.classList.add('win');
             resultText.textContent = 'User won!';
             break;
         
         case -1:
-            resultText.style.color = 'red';
+            resultText.classList.add('lose');
             resultText.textContent = 'Computer won!';
             break;
 
         case 0:
-            resultText.style.color = 'grey';
+            resultText.classList.add('tie');
             resultText.textContent = 'It\'s a tie!';
             break;
     }
 
     roundResultBoard.classList.remove('hidden');
-    roundResultBoard.classList.add('round-result');
 }
 
 const nextRound = document.querySelector('#next-round');
 nextRound.addEventListener('click', () => {
-    roundResultBoard.classList.remove('round-result');
     roundResultBoard.classList.add('hidden');
 
-    possibleUserChoices.forEach((choice) => {
-        choice.lastElementChild.textContent = null;
-        choiceContainer.appendChild(choice);
+    possibleUserChoices.forEach((card) => {
+        card.lastElementChild.textContent = null;
+        card.classList.remove('hidden');
     })
 });
 
