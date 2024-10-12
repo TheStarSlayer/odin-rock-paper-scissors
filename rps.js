@@ -30,7 +30,8 @@ endGame.addEventListener('click', () => {
     gameResult.classList.remove('hidden');
 
     let gameResultText = gameResult.firstElementChild;
-    gameResult.classList.forEach((cssClass) => {
+    let dupeGameResultText = gameResultText;
+    dupeGameResultText.classList.forEach((cssClass) => {
         gameResultText.classList.remove(cssClass);
     });
 
@@ -119,7 +120,8 @@ function decideVictor(userChoice, computerChoice) {
 function updateChosenCards(userChoice, computerChoice) {
     possibleUserChoices.forEach((choice) => {
         let cardChosenBy = choice.lastElementChild;
-        choice.lastElementChild.classList.forEach((cssClass) => {
+        let dupeChoice = choice;
+        dupeChoice.lastElementChild.classList.forEach((cssClass) => {
             cardChosenBy.classList.remove(cssClass);
         });
 
@@ -148,8 +150,8 @@ function updateChosenCards(userChoice, computerChoice) {
 
 function showResults(victor) {
     const resultText = roundResultBoard.firstElementChild;
-
-    resultText.classList.forEach(cssClass => {
+    const dupeResultText = resultText;
+    dupeResultText.classList.forEach(cssClass => {
         resultText.classList.remove(cssClass);
     });
 
